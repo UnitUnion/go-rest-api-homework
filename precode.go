@@ -41,15 +41,11 @@ var tasks = map[string]Task{
 }
 
 // Ниже напишите обработчики для каждого эндпоинта
-func getTasks(w http.ResponseWriter, r *http.Request) {
-	resp, err := json.Marshal(tasks)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+func getTasks(w http.ResponseWriter, _ *http.Request) {
+	resp, _ := json.Marshal(tasks)
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	w.Write(resp)
+	_, _ = w.Write(resp)
 }
 
 func postTasks(w http.ResponseWriter, r *http.Request) {
@@ -77,7 +73,7 @@ func getTasksID(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
 	_, ok := tasks[id]
 	if !ok {
-		http.Error(w, "400 Bad Request", http.StatusBadRequest)
+		http.Error(w, "", http.StatusBadRequest)
 		return
 	}
 	resp, err := json.Marshal(tasks[id])
@@ -87,14 +83,14 @@ func getTasksID(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	w.Write(resp)
+	_, _ = w.Write(resp)
 }
 
 func delTasksID(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
 	_, ok := tasks[id]
 	if !ok {
-		http.Error(w, "400 Bad Request", http.StatusBadRequest)
+		http.Error(w, "Task ID could not be read properly.", http.StatusBadRequest)
 		return
 	}
 	delete(tasks, id)
