@@ -64,6 +64,11 @@ func postTasks(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+	_, ok := tasks[t.ID]
+	if ok == true {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 	tasks[t.ID] = t
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
